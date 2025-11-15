@@ -26,10 +26,7 @@
     transform: translateY(-5px);
 }
 
-.dish-card:hover .add-btn {
-    background-color: tomato;
-    color: white;
-}
+
 
 /* Изображение блюда */
 .dish-card img {
