@@ -56,10 +56,6 @@ nav a:hover {
     background-color: #f8f9fa;
 }
 
-#active {
-    color: tomato;
-    font-weight: 500;
-}
 
 /* Основной контент */
 main {
