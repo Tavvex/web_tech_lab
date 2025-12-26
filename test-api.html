@@ -1,81 +1,500 @@
-<!-- test-api.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест API - BusinessLunch</title>
+    <title>Тестирование API - Лабораторная работа 7</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test-container { max-width: 800px; margin: 0 auto; }
-        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
-        #result { margin-top: 20px; padding: 15px; background: #f5f5f5; }
-        .dish-item { border-bottom: 1px solid #ddd; padding: 10px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .api-url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .api-url code {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+        
+        .secondary-btn {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .secondary-btn:hover {
+            background: #bdc3c7;
+            transform: translateY(-2px);
+        }
+        
+        .result-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .dishes-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .dish-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dish-info h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .dish-info p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .dish-price {
+            background: #2c3e50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .console-log {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #95a5a6;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .test-btn {
+                min-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="test-container">
-        <h1>Тестирование функции loadDishes()</h1>
-        <p>URL API: <code>https://edu.std-900.ist.mospolytech.ru/labs/api/dishes</code></p>
+        <h1>Тестирование лабораторной работы 7</h1>
+        <p class="subtitle">Функция loadDishes() и работа с API</p>
         
-        <button id="test-btn">Запустить loadDishes()</button>
-        <button id="test-xhr">Тест XMLHttpRequest</button>
+        <div class="api-url">
+            <strong>URL API:</strong><br>
+            <code>https://edu.std-900.ist.mospolytech.ru/labs/api/dishes</code>
+        </div>
         
-        <div id="result">
-            <h3>Результат:</h3>
-            <div id="dishes-list"></div>
+        <div class="test-buttons">
+            <button id="test-load-dishes" class="test-btn primary-btn">
+                🚀 Запустить loadDishes()
+            </button>
+            <button id="test-xhr" class="test-btn secondary-btn">
+                🔄 Тест XMLHttpRequest
+            </button>
+            <button id="test-fallback" class="test-btn secondary-btn">
+                🛡️ Тест Fallback данных
+            </button>
+            <button id="clear-console" class="test-btn secondary-btn">
+                🧹 Очистить консоль
+            </button>
+        </div>
+        
+        <div class="result-section">
+            <div class="result-header">
+                <div class="result-title">Результаты тестирования</div>
+                <div id="status-badge" class="status-badge">Ожидание</div>
+            </div>
+            
+            <div id="dishes-list" class="dishes-list">
+                <p style="color: #7f8c8d; text-align: center; padding: 40px;">
+                    Нажмите кнопку "Запустить loadDishes()" для начала тестирования
+                </p>
+            </div>
+            
+            <div class="console-log">
+                <div class="console-header">
+                    <span>Консоль браузера (имитация)</span>
+                    <span>F12 для реальной консоли</span>
+                </div>
+                <div id="console-output"></div>
+            </div>
         </div>
     </div>
 
+    <!-- Подключаем API сервис -->
     <script src="api-service.js"></script>
+    
     <script>
-        document.getElementById('test-btn').addEventListener('click', async function() {
-            console.clear();
-            console.log('=== ТЕСТ loadDishes() ===');
+        // Элементы DOM
+        const testBtn = document.getElementById('test-load-dishes');
+        const xhrBtn = document.getElementById('test-xhr');
+        const fallbackBtn = document.getElementById('test-fallback');
+        const clearBtn = document.getElementById('clear-console');
+        const dishesList = document.getElementById('dishes-list');
+        const consoleOutput = document.getElementById('console-output');
+        const statusBadge = document.getElementById('status-badge');
+        
+        // Лог в имитацию консоли
+        function logToConsole(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#e74c3c' : 
+                         type === 'success' ? '#27ae60' : '#3498db';
             
-            const resultDiv = document.getElementById('dishes-list');
-            resultDiv.innerHTML = '<p>Загрузка...</p>';
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #95a5a6;">[${timestamp}]</span> 
+                                 <span style="color: ${color};">${message}</span>`;
+            consoleOutput.appendChild(logEntry);
             
-            try {
-                // Вызываем функцию loadDishes()
-                const dishes = await window.loadDishes();
+            // Прокручиваем вниз
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Также логируем в настоящую консоль
+            if (type === 'error') {
+                console.error(message);
+            } else if (type === 'success') {
+                console.log('%c' + message, 'color: green');
+            } else {
+                console.log(message);
+            }
+        }
+        
+        // Обновление статуса
+        function updateStatus(text, type) {
+            statusBadge.textContent = text;
+            statusBadge.className = 'status-badge';
+            
+            if (type === 'success') {
+                statusBadge.classList.add('status-success');
+            } else if (type === 'error') {
+                statusBadge.classList.add('status-error');
+            } else if (type === 'loading') {
+                statusBadge.classList.add('status-loading');
+            }
+        }
+        
+        // Отображение блюд
+        function displayDishes(dishesArray) {
+            if (!Array.isArray(dishesArray) || dishesArray.length === 0) {
+                dishesList.innerHTML = '<p style="color: #e74c3c; text-align: center; padding: 40px;">❌ Не удалось загрузить блюда</p>';
+                return;
+            }
+            
+            dishesList.innerHTML = '';
+            
+            // Отображаем первые 10 блюд
+            dishesArray.slice(0, 10).forEach(dish => {
+                const dishItem = document.createElement('div');
+                dishItem.className = 'dish-item';
                 
-                // Показываем результат
-                resultDiv.innerHTML = `
-                    <p><strong>✅ Успешно!</strong> Загружено ${dishes.length} блюд</p>
-                    <h4>Первые 5 блюд:</h4>
+                dishItem.innerHTML = `
+                    <div class="dish-info">
+                        <h4>${dish.name}</h4>
+                        <p>Категория: ${dish.category} | Тип: ${dish.kind} | Вес: ${dish.count}</p>
+                        <p>ID: ${dish.keyword}</p>
+                    </div>
+                    <div class="dish-price">${dish.price} ₽</div>
                 `;
                 
-                dishes.slice(0, 5).forEach(dish => {
-                    resultDiv.innerHTML += `
-                        <div class="dish-item">
-                            <strong>${dish.name}</strong><br>
-                            Категория: ${dish.category}, Цена: ${dish.price} ₽
-                        </div>
-                    `;
-                });
+                dishesList.appendChild(dishItem);
+            });
+            
+            if (dishesArray.length > 10) {
+                const moreItem = document.createElement('div');
+                moreItem.innerHTML = `<p style="text-align: center; color: #7f8c8d; margin-top: 10px;">
+                    ... и ещё ${dishesArray.length - 10} блюд
+                </p>`;
+                dishesList.appendChild(moreItem);
+            }
+        }
+        
+        // Тест основной функции loadDishes()
+        testBtn.addEventListener('click', async function() {
+            console.clear();
+            logToConsole('=== ТЕСТ ФУНКЦИИ loadDishes() ===', 'info');
+            logToConsole(`Запуск функции loadDishes()...`, 'info');
+            logToConsole(`URL API: ${apiService.API_URL}`, 'info');
+            
+            updateStatus('Загрузка...', 'loading');
+            dishesList.innerHTML = '<p style="text-align: center; padding: 40px; color: #3498db;">⏳ Загрузка данных с API...</p>';
+            
+            try {
+                const startTime = Date.now();
                 
-                if (dishes.length > 5) {
-                    resultDiv.innerHTML += `<p>... и еще ${dishes.length - 5} блюд</p>`;
+                // Вызываем функцию loadDishes()
+                const dishes = await apiService.loadDishes();
+                
+                const endTime = Date.now();
+                const loadTime = endTime - startTime;
+                
+                logToConsole(`✅ УСПЕХ! Функция loadDishes() выполнена за ${loadTime}ms`, 'success');
+                logToConsole(`Загружено ${dishes.length} блюд`, 'success');
+                
+                if (dishes.length > 0) {
+                    logToConsole(`Первое блюдо: "${dishes[0].name}" (${dishes[0].price} ₽)`, 'success');
                 }
                 
+                updateStatus(`Успешно: ${dishes.length} блюд`, 'success');
+                displayDishes(dishes);
+                
             } catch (error) {
-                resultDiv.innerHTML = `<p style="color: red;">❌ Ошибка: ${error.message}</p>`;
+                logToConsole(`❌ ОШИБКА: ${error.message}`, 'error');
+                updateStatus('Ошибка загрузки', 'error');
+                
+                // Показываем fallback данные
+                const fallbackDishes = [
+                    {
+                        "category": "soup",
+                        "count": "350 г",
+                        "image": "images/soup-murhs.jpg",
+                        "keyword": "gaspacho",
+                        "kind": "veg",
+                        "name": "Гаспачо (Fallback)",
+                        "price": 195
+                    },
+                    {
+                        "category": "main",
+                        "count": "400 г",
+                        "image": "images/main-rise.jpg",
+                        "keyword": "teriyaki_chicken",
+                        "kind": "meat",
+                        "name": "Курица терияки с рисом (Fallback)",
+                        "price": 350
+                    }
+                ];
+                
+                displayDishes(fallbackDishes);
+                logToConsole('🔄 Используются fallback данные для демонстрации', 'info');
             }
         });
         
         // Тест XMLHttpRequest версии
-        document.getElementById('test-xhr').addEventListener('click', function() {
-            if (window.apiService && window.apiService.loadDishesXHR) {
-                window.apiService.loadDishesXHR()
-                    .then(dishes => {
-                        alert(`XMLHttpRequest: Загружено ${dishes.length} блюд`);
-                    })
-                    .catch(error => {
-                        alert(`XMLHttpRequest ошибка: ${error.message}`);
-                    });
+        xhrBtn.addEventListener('click', function() {
+            logToConsole('=== ТЕСТ XMLHttpRequest ВЕРСИИ ===', 'info');
+            
+            if (typeof apiService.loadDishesXHR !== 'function') {
+                logToConsole('❌ Функция loadDishesXHR не найдена', 'error');
+                return;
             }
+            
+            updateStatus('Загрузка XHR...', 'loading');
+            
+            apiService.loadDishesXHR()
+                .then(dishes => {
+                    logToConsole(`✅ XMLHttpRequest: Загружено ${dishes.length} блюд`, 'success');
+                    updateStatus(`XHR: ${dishes.length} блюд`, 'success');
+                    displayDishes(dishes);
+                })
+                .catch(error => {
+                    logToConsole(`❌ XMLHttpRequest ошибка: ${error.message}`, 'error');
+                    updateStatus('XHR ошибка', 'error');
+                });
         });
+        
+        // Тест fallback данных
+        fallbackBtn.addEventListener('click', function() {
+            logToConsole('=== ТЕСТ FALLBACK ДАННЫХ ===', 'info');
+            
+            // Создаем ошибку для теста fallback
+            const originalFetch = window.fetch;
+            window.fetch = function() {
+                return Promise.reject(new Error('Имитация ошибки сети для теста'));
+            };
+            
+            // Сохраняем оригинальный loadDishes
+            const originalLoadDishes = apiService.loadDishes;
+            
+            // Переопределяем для теста
+            apiService.loadDishes = async function() {
+                logToConsole('🔄 Имитация ошибки сети...', 'info');
+                updateStatus('Тест fallback...', 'loading');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const fallbackDishes = [
+                    {
+                        "category": "soup",
+                        "count": "300 г",
+                        "image": "images/soup-tomato.jpg",
+                        "keyword": "test_fallback_1",
+                        "kind": "veg",
+                        "name": "Тестовый суп (Fallback)",
+                        "price": 150
+                    },
+                    {
+                        "category": "drink",
+                        "count": "250 мл",
+                        "image": "images/drink-orange.jpg",
+                        "keyword": "test_fallback_2",
+                        "kind": "cold",
+                        "name": "Тестовый напиток (Fallback)",
+                        "price": 100
+                    }
+                ];
+                
+                logToConsole(`✅ Fallback: Использовано ${fallbackDishes.length} тестовых блюд`, 'success');
+                updateStatus(`Fallback: ${fallbackDishes.length} блюд`, 'success');
+                displayDishes(fallbackDishes);
+                
+                return fallbackDishes;
+            };
+            
+            // Запускаем тест
+            apiService.loadDishes().finally(() => {
+                // Восстанавливаем оригинальные функции
+                window.fetch = originalFetch;
+                apiService.loadDishes = originalLoadDishes;
+            });
+        });
+        
+        // Очистка консоли
+        clearBtn.addEventListener('click', function() {
+            consoleOutput.innerHTML = '';
+            logToConsole('Консоль очищена', 'info');
+        });
+        
+        // Инициализация
+        logToConsole('Тестовая страница загружена. Готово к тестированию лабораторной работы 7.', 'success');
+        logToConsole(`API URL: ${apiService.API_URL}`, 'info');
+        logToConsole('Нажмите "Запустить loadDishes()" для тестирования', 'info');
     </script>
 </body>
 </html>

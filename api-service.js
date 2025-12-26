@@ -1,6 +1,8 @@
-// [file name]: api-service.js
+// api-service.js
+// Основной файл для лабораторной работы 7
+// Реализует функцию loadDishes() для загрузки данных с API
 
-// URL API согласно заданию
+// URL API согласно заданию для Netlify/GitHub Pages
 const API_URL = 'https://edu.std-900.ist.mospolytech.ru/labs/api/dishes';
 
 // Глобальный массив для хранения блюд
@@ -10,7 +12,7 @@ let isLoading = false;
 // Основная функция loadDishes() - ТРЕБУЕТСЯ ПО ЗАДАНИЮ
 async function loadDishes() {
     console.log('Запуск функции loadDishes()...');
-    console.log(`URL API: ${API_URL}`);
+    console.log(`Обращение к API: ${API_URL}`);
     
     isLoading = true;
     
@@ -19,54 +21,64 @@ async function loadDishes() {
         showLoadingIndicator();
         
         // Используем fetch для запроса к API
+        console.log('Отправка fetch запроса...');
         const response = await fetch(API_URL, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            // mode: 'cors' - включено по умолчанию
+            }
         });
         
-        console.log('Статус ответа:', response.status, response.statusText);
+        console.log('Получен ответ от API. Статус:', response.status, response.statusText);
         
         if (!response.ok) {
             throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
         }
         
-        // Парсим JSON
+        // Парсим JSON данные
         const data = await response.json();
         
-        // Сохраняем данные
+        // Сохраняем данные в глобальный массив
         dishes = data;
         
-        console.log(`✅ Успешно загружено ${dishes.length} блюд из API`);
-        console.log('Пример первого блюда:', dishes[0]);
+        console.log(`✅ УСПЕШНО! Загружено ${dishes.length} блюд из API`);
         
-        // Скрываем индикатор
+        // Выводим информацию о первых 3 блюдах для проверки
+        if (dishes.length > 0) {
+            console.log('Примеры загруженных блюд:');
+            dishes.slice(0, 3).forEach((dish, i) => {
+                console.log(`${i + 1}. ${dish.name} (${dish.category}) - ${dish.price} ₽`);
+            });
+        }
+        
+        // Скрываем индикатор загрузки
         hideLoadingIndicator();
         
         // Вызываем callback для инициализации интерфейса
         if (typeof window.onDishesLoaded === 'function') {
+            console.log('Вызов onDishesLoaded() для обновления интерфейса');
             window.onDishesLoaded();
         }
         
         return dishes;
         
     } catch (error) {
-        console.error('❌ Ошибка при загрузке блюд:', error);
+        console.error('❌ ОШИБКА при загрузке блюд:', error.message);
+        console.error('Полная ошибка:', error);
         
-        // Скрываем индикатор
+        // Скрываем индикатор загрузки
         hideLoadingIndicator();
         
         // Показываем сообщение об ошибке
         showError('Не удалось загрузить меню. Проверьте подключение к интернету.');
         
-        // Используем fallback данные
+        // Используем fallback данные для демонстрации
+        console.log('🔄 Используем fallback данные для демонстрации...');
         dishes = getFallbackDishes();
-        console.log(`🔄 Использовано ${dishes.length} fallback блюд`);
+        console.log(`Загружено ${dishes.length} fallback блюд`);
         
-        // Все равно вызываем callback с fallback данными
+        // Вызываем callback с fallback данными
         if (typeof window.onDishesLoaded === 'function') {
             window.onDishesLoaded();
         }
@@ -117,6 +129,15 @@ function getFallbackDishes() {
             "price": 200
         },
         {
+            "category": "soup",
+            "count": "300 г",
+            "image": "images/soup-salmon.jpg",
+            "keyword": "fish_soup",
+            "kind": "fish",
+            "name": "Уха из семги",
+            "price": 250
+        },
+        {
             "category": "main",
             "count": "400 г",
             "image": "images/main-rise.jpg",
@@ -153,6 +174,15 @@ function getFallbackDishes() {
             "price": 380
         },
         {
+            "category": "main",
+            "count": "350 г",
+            "image": "images/main-curry.jpg",
+            "keyword": "vegetable_curry",
+            "kind": "veg",
+            "name": "Овощное карри с киноа",
+            "price": 290
+        },
+        {
             "category": "salad",
             "count": "250 г",
             "image": "images/salad-caesar.jpg",
@@ -169,6 +199,24 @@ function getFallbackDishes() {
             "kind": "veg",
             "name": "Греческий салат",
             "price": 240
+        },
+        {
+            "category": "salad",
+            "count": "200 г",
+            "image": "images/salad-shrimp.jpg",
+            "keyword": "shrimp_cocktail",
+            "kind": "fish",
+            "name": "Коктейль из креветок",
+            "price": 320
+        },
+        {
+            "category": "salad",
+            "count": "220 г",
+            "image": "images/salad-caprese.jpg",
+            "keyword": "caprese",
+            "kind": "veg",
+            "name": "Капрезе с моцареллой",
+            "price": 260
         },
         {
             "category": "drink",
@@ -189,6 +237,33 @@ function getFallbackDishes() {
             "price": 150
         },
         {
+            "category": "drink",
+            "count": "250 мл",
+            "image": "images/drink-red.jpg",
+            "keyword": "cranberry_juice",
+            "kind": "cold",
+            "name": "Морс клюквенный",
+            "price": 160
+        },
+        {
+            "category": "drink",
+            "count": "300 мл",
+            "image": "images/drink-green.jpg",
+            "keyword": "green_tea",
+            "kind": "hot",
+            "name": "Зеленый чай",
+            "price": 120
+        },
+        {
+            "category": "drink",
+            "count": "300 мл",
+            "image": "images/drink-black.jpg",
+            "keyword": "black_tea",
+            "kind": "hot",
+            "name": "Черный чай с лимоном",
+            "price": 120
+        },
+        {
             "category": "dessert",
             "count": "150 г",
             "image": "images/dessert-tiramisu.jpg",
@@ -196,132 +271,258 @@ function getFallbackDishes() {
             "kind": "medium",
             "name": "Тирамису",
             "price": 220
+        },
+        {
+            "category": "dessert",
+            "count": "140 г",
+            "image": "images/dessert-chocolate.jpg",
+            "keyword": "chocolate_cake",
+            "kind": "medium",
+            "name": "Шоколадный торт",
+            "price": 200
+        },
+        {
+            "category": "dessert",
+            "count": "180 г",
+            "image": "images/dessert-cheesecake.jpg",
+            "keyword": "cheesecake",
+            "kind": "large",
+            "name": "Чизкейк Нью-Йорк",
+            "price": 240
         }
     ];
 }
 
-// Вспомогательные функции UI
+// Функция для отображения индикатора загрузки
 function showLoadingIndicator() {
-    // Простой индикатор загрузки
+    // Создаем элемент индикатора
     const loader = document.createElement('div');
-    loader.id = 'api-loader';
-    loader.innerHTML = `
-        <div style="
+    loader.id = 'loading-indicator';
+    
+    // Стили для индикатора
+    const styles = `
+        #loading-indicator {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-        ">
-            <div style="
-                width: 50px;
-                height: 50px;
-                border: 5px solid #f3f3f3;
-                border-top: 5px solid tomato;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin-bottom: 20px;
-            "></div>
-            <p style="font-size: 1.2rem; color: #2c3e50;">Загрузка меню...</p>
-        </div>
-    `;
-    
-    // Добавляем стили для анимации
-    const style = document.createElement('style');
-    style.textContent = `
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid tomato;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-align: center;
+            max-width: 300px;
+        }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
     `;
     
-    document.head.appendChild(style);
+    // Создаем элемент стилей
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+    
+    // Содержимое индикатора
+    loader.innerHTML = `
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Загрузка меню...</div>
+        <div class="loading-subtext">Обращение к API: ${API_URL}</div>
+    `;
+    
     document.body.appendChild(loader);
 }
 
+// Функция для скрытия индикатора загрузки
 function hideLoadingIndicator() {
-    const loader = document.getElementById('api-loader');
+    const loader = document.getElementById('loading-indicator');
     if (loader) {
         loader.remove();
     }
 }
 
+// Функция для отображения ошибки
 function showError(message) {
     // Удаляем предыдущие ошибки
-    const existingError = document.getElementById('api-error');
+    const existingError = document.getElementById('api-error-message');
     if (existingError) {
         existingError.remove();
     }
     
     // Создаем сообщение об ошибке
     const errorDiv = document.createElement('div');
-    errorDiv.id = 'api-error';
-    errorDiv.innerHTML = `
-        <div style="
+    errorDiv.id = 'api-error-message';
+    
+    // Стили для сообщения об ошибке
+    const styles = `
+        #api-error-message {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #ffeaea;
+            background-color: #ffeaea;
             border: 2px solid #e74c3c;
             border-radius: 10px;
-            padding: 15px;
-            max-width: 300px;
+            padding: 20px;
+            max-width: 350px;
             z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        ">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 1.5rem; margin-right: 10px;">⚠️</span>
-                <strong style="color: #c0392b;">Ошибка загрузки</strong>
-            </div>
-            <p style="color: #c0392b; margin-bottom: 15px; font-size: 0.9rem;">${message}</p>
-            <button id="retry-api" style="
-                background: #e74c3c;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-family: inherit;
-            ">Повторить</button>
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .error-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .error-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .error-title {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .error-message {
+            color: #c0392b;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .error-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .error-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .retry-btn {
+            background-color: #e74c3c;
+            color: white;
+            flex: 2;
+        }
+        
+        .retry-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .continue-btn {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            flex: 1;
+        }
+        
+        .continue-btn:hover {
+            background-color: #bdc3c7;
+        }
+    `;
+    
+    // Добавляем стили
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+    
+    // Содержимое сообщения об ошибке
+    errorDiv.innerHTML = `
+        <div class="error-header">
+            <span class="error-icon">⚠️</span>
+            <span class="error-title">Ошибка загрузки</span>
+        </div>
+        <div class="error-message">${message}</div>
+        <div class="error-buttons">
+            <button id="retry-loading" class="error-btn retry-btn">Повторить</button>
+            <button id="continue-anyway" class="error-btn continue-btn">Продолжить</button>
         </div>
     `;
     
     document.body.appendChild(errorDiv);
     
-    // Обработчик для кнопки повтора
-    document.getElementById('retry-api').addEventListener('click', function() {
+    // Обработчики для кнопок
+    document.getElementById('retry-loading').addEventListener('click', function() {
         errorDiv.remove();
         loadDishes();
     });
     
-    // Автоскрытие через 10 секунд
+    document.getElementById('continue-anyway').addEventListener('click', function() {
+        errorDiv.remove();
+    });
+    
+    // Автоматически скрываем через 15 секунд
     setTimeout(() => {
         if (errorDiv.parentNode) {
             errorDiv.remove();
         }
-    }, 10000);
+    }, 15000);
 }
 
-// Альтернативная версия с XMLHttpRequest (для демонстрации)
+// Альтернативная реализация с XMLHttpRequest (для демонстрации)
 function loadDishesXHR() {
+    console.log('Загрузка данных с использованием XMLHttpRequest...');
+    
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         
         xhr.open('GET', API_URL, true);
         xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
         
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const data = JSON.parse(xhr.responseText);
                     dishes = data;
-                    console.log(`Загружено ${dishes.length} блюд (XHR)`);
+                    console.log(`XMLHttpRequest: Загружено ${dishes.length} блюд`);
                     
                     if (typeof window.onDishesLoaded === 'function') {
                         window.onDishesLoaded();
@@ -329,41 +530,55 @@ function loadDishesXHR() {
                     
                     resolve(dishes);
                 } catch (error) {
+                    console.error('Ошибка парсинга JSON:', error);
                     reject(error);
                 }
             } else {
-                reject(new Error(`HTTP ${xhr.status}`));
+                reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
             }
         };
         
         xhr.onerror = function() {
-            reject(new Error('Network error'));
+            reject(new Error('Ошибка сети при запросе к API'));
         };
+        
+        xhr.ontimeout = function() {
+            reject(new Error('Таймаут запроса к API'));
+        };
+        
+        // Устанавливаем таймаут 15 секунд
+        xhr.timeout = 15000;
         
         xhr.send();
     });
 }
 
-// Геттеры для доступа к данным
+// Вспомогательные функции для доступа к данным
 function getDishes() {
     return dishes;
 }
 
 function getLoadingStatus() {
     return {
-        isLoading,
-        dishesCount: dishes.length
+        isLoading: isLoading,
+        dishesCount: dishes.length,
+        apiUrl: API_URL
     };
 }
 
-// Экспортируем API
+// Экспортируем API сервис
 window.apiService = {
-    loadDishes,          // Основная функция
-    loadDishesXHR,       // Альтернативная версия
-    getDishes,
-    getLoadingStatus,
-    API_URL              // Для отладки
+    loadDishes,          // Основная функция (fetch)
+    loadDishesXHR,       // Альтернативная функция (XMLHttpRequest)
+    getDishes,           // Получить загруженные блюда
+    getLoadingStatus,    // Получить статус загрузки
+    API_URL              // URL API (для отладки)
 };
 
-// Экспортируем также глобально для прямого вызова
+// Экспортируем основную функцию глобально для прямого вызова
 window.loadDishes = loadDishes;
+
+// Информация при загрузке модуля
+console.log('API Service загружен');
+console.log('Доступные функции: loadDishes(), apiService.loadDishes(), apiService.loadDishesXHR()');
+console.log(`API URL: ${API_URL}`);

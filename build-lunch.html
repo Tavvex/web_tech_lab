@@ -291,27 +291,77 @@
 
     <!-- Подключаем JavaScript файлы -->
     <!-- В конец файла build-lunch.html, перед закрывающим тегом </body> -->
+    <!-- 1. API Service - новый файл для лабораторной 7 -->
     <script src="api-service.js"></script>
+    
+    <!-- 2. Display Dishes - обновлен для работы с API -->
     <script src="display-dishes.js"></script>
+    
+    <!-- 3. Order Manager - обновлен для работы с API -->
     <script src="order-manager.js"></script>
+    
+    <!-- 4. Filters - остается без изменений -->
     <script src="filters.js"></script>
+    
+    <!-- 5. Order Validation - остается без изменений -->
     <script src="order-validation.js"></script>
     
     <script>
-        // Инициализация при загрузке страницы
+        // Главный скрипт инициализации для лабораторной работы 7
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('BusinessLunch - Инициализация...');
+            console.log('=== BUSINESS LUNCH - ЛАБОРАТОРНАЯ РАБОТА 7 ===');
+            console.log('Инициализация приложения...');
             
-            // Вызываем требуемую функцию loadDishes()
-            if (typeof loadDishes === 'function') {
-                loadDishes().then(function(dishes) {
-                    console.log(`Основная страница: загружено ${dishes.length} блюд`);
-                }).catch(function(error) {
-                    console.error('Ошибка загрузки:', error);
-                });
-            } else {
-                console.error('Функция loadDishes не найдена!');
+            // Проверяем доступность API сервиса
+            if (typeof apiService === 'undefined') {
+                console.error('❌ API Service не загружен!');
+                alert('Ошибка: API Service не загружен. Проверьте наличие файла api-service.js');
+                return;
             }
+            
+            console.log('✅ API Service доступен');
+            console.log(`API URL: ${apiService.API_URL}`);
+            
+            // Вызываем требуемую функцию loadDishes() из лабораторной работы 7
+            console.log('🚀 Запуск функции loadDishes()...');
+            
+            // Вариант 1: Используем apiService
+            apiService.loadDishes()
+                .then(function(dishes) {
+                    console.log(`✅ Функция loadDishes() выполнена успешно. Загружено: ${dishes.length} блюд`);
+                    
+                    // Проверяем, что все модули инициализированы
+                    if (typeof window.displayDishes !== 'undefined') {
+                        console.log('✅ DisplayDishes модуль доступен');
+                    }
+                    
+                    if (typeof window.orderManager !== 'undefined') {
+                        console.log('✅ OrderManager модуль доступен');
+                    }
+                    
+                    if (typeof window.showNotification !== 'undefined') {
+                        console.log('✅ Notification система доступна');
+                    }
+                    
+                    console.log('✅ Все системы загружены и готовы к работе');
+                })
+                .catch(function(error) {
+                    console.error('❌ Ошибка при выполнении loadDishes():', error);
+                    
+                    // Показываем сообщение об ошибке
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification(
+                            'Ошибка загрузки',
+                            'Не удалось загрузить меню. Используются локальные данные.',
+                            '⚠️'
+                        );
+                    }
+                });
+            
+            // Вариант 2: Можно также вызвать глобальную функцию
+            // window.loadDishes();
+            
+            console.log('=== ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА ===');
         });
     </script>
 </body>
