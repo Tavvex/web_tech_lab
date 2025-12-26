@@ -1,10 +1,27 @@
+// order-manager.js - ОБНОВЛЕННАЯ ВЕРСИЯ
+
+// Объект для хранения выбранных блюд
 const selectedDishes = {
     soup: null,
     main: null,
-    salad: null,    
+    salad: null,
     drink: null,
-    dessert: null   
+    dessert: null
 };
+
+// Глобальная переменная для хранения всех блюд
+let dishes = [];
+
+// Функция для инициализации блюд
+function initDishesForOrder(loadedDishes) {
+    dishes = loadedDishes;
+    console.log(`Order manager: загружено ${dishes.length} блюд`);
+}
+
+// Функция для получения блюд
+function getDishesForOrder() {
+    return dishes;
+}
 
 // Ссылки на DOM элементы
 let orderBlock = null;
@@ -18,6 +35,7 @@ function initDomElements() {
     
     orderBlock = form.querySelector('.order-block');
     
+    // Создаем или находим элементы
     emptyMessage = orderBlock.querySelector('.empty-order-message');
     if (!emptyMessage) {
         emptyMessage = document.createElement('div');
@@ -130,24 +148,28 @@ function getNotSelectedMessage(categoryName) {
     }
 }
 
-// Функция для выбора блюда - ИСПРАВЛЕННАЯ ВЕРСИЯ
+// Функция для выбора блюда
 function selectDish(dishKeyword) {
+    if (dishes.length === 0) {
+        console.error('Блюда еще не загружены');
+        showNotification(
+            'Данные загружаются',
+            'Пожалуйста, подождите, пока загрузится меню.',
+            '⏳'
+        );
+        return;
+    }
+    
     const dish = dishes.find(d => d.keyword === dishKeyword);
     if (!dish) {
         console.error('Блюдо не найдено:', dishKeyword);
         return;
     }
     
-    console.log('Выбираем блюдо:', dish.name, 'Категория:', dish.category);
-    
     // Проверяем, существует ли категория в selectedDishes
     if (!selectedDishes.hasOwnProperty(dish.category)) {
         console.error('Категория не найдена в selectedDishes:', dish.category);
-        console.log('Доступные категории:', Object.keys(selectedDishes));
-        
-        // Динамически добавляем категорию если её нет
-        selectedDishes[dish.category] = null;
-        console.log('Категория добавлена:', dish.category);
+        return;
     }
     
     // Добавляем визуальную обратную связь
@@ -160,7 +182,6 @@ function selectDish(dishKeyword) {
     }
     
     selectedDishes[dish.category] = dish;
-    console.log('Блюдо добавлено в selectedDishes:', selectedDishes);
     updateOrderForm();
 }
 
@@ -169,8 +190,6 @@ function removeDish(category) {
     if (selectedDishes.hasOwnProperty(category)) {
         selectedDishes[category] = null;
         updateOrderForm();
-    } else {
-        console.error('Попытка удалить блюдо из несуществующей категории:', category);
     }
 }
 
@@ -199,6 +218,43 @@ function updateOrderCost() {
     }
 }
 
+// Функция для показа уведомления (если order-validation.js не загружен)
+function showNotification(title, message, icon) {
+    // Проверяем, есть ли уже функция showNotification
+    if (typeof window.showNotification === 'function') {
+        window.showNotification(title, message, icon);
+        return;
+    }
+    
+    // Простая реализация на случай отсутствия order-validation.js
+    const notification = document.createElement('div');
+    notification.className = 'simple-notification';
+    notification.innerHTML = `
+        <div>${icon} ${title}</div>
+        <p>${message}</p>
+    `;
+    
+    // Добавляем стили
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
 // Инициализация обработчиков событий
 function initEventHandlers() {
     // Обработчик клика на карточку блюда
@@ -220,18 +276,16 @@ function initEventHandlers() {
 // Инициализируем при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Order Manager инициализирован');
-    console.log('Доступные категории в selectedDishes:', Object.keys(selectedDishes));
-    console.log('Всего блюд в dishes:', dishes.length);
     
-    // Выводим информацию о блюдах по категориям
-    const categories = {};
-    dishes.forEach(dish => {
-        if (!categories[dish.category]) {
-            categories[dish.category] = 0;
+    // Ждем загрузки блюд из API
+    if (typeof apiService !== 'undefined') {
+        const status = apiService.getLoadingStatus();
+        if (!status.isLoading && status.dishesCount > 0) {
+            // Блюда уже загружены
+            const loadedDishes = apiService.getDishes();
+            initDishesForOrder(loadedDishes);
         }
-        categories[dish.category]++;
-    });
-    console.log('Блюда по категориям:', categories);
+    }
     
     initDomElements();
     initEventHandlers();
@@ -251,3 +305,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Экспортируем функции для использования в других модулях
+window.orderManager = {
+    selectedDishes,
+    getDishesForOrder,
+    selectDish,
+    removeDish,
+    updateOrderForm
+};

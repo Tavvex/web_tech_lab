@@ -91,6 +91,129 @@
                 </div>
             </section>
             
+            <!-- В файл build-lunch.html добавляем после main и перед order-form-section -->
+            <section class="lunch-variants-section">
+                <h2>Варианты бизнес-ланчей</h2>
+                <p class="lunch-info">Выберите один из готовых вариантов или соберите свой</p>
+
+                <div class="variants-grid">
+                    <!-- Вариант 1 -->
+                    <div class="variant-card">
+                        <h3>Комбо 1</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-murhs.jpg" alt="Суп">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/main-rise.jpg" alt="Главное блюдо">
+                                <p>Главное блюдо</p>
+                           </div>
+                            <div class="variant-dish">
+                                <img src="images/salad-caesar.jpg" alt="Салат">
+                                <p>Салат</p>
+                         </div>
+                         <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток">
+                                <p>Напиток</p>
+                            </div>
+                        </div>
+                        <p class="dessert-note">Десерт можно добавить к любому варианту</p>
+                    </div>
+
+                    <!-- Вариант 2 -->
+                    <div class="variant-card">
+                        <h3>Комбо 2</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-meat.jpg" alt="Суп">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/main-itally.jpg" alt="Главное блюдо">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-apple.jpg" alt="Напиток">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="empty-dish">
+                                <p>—</p>
+                            </div>
+                        </div>
+                        <p class="dessert-note">Десерт можно добавить к любому варианту</p>
+                    </div>
+
+                    <!-- Вариант 3 -->
+                    <div class="variant-card">
+                        <h3>Комбо 3</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-tomato.jpg" alt="Суп">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/salad-greek.jpg" alt="Салат">
+                                <p>Салат</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-red.jpg" alt="Напиток">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="empty-dish">
+                                <p>—</p>
+                            </div>
+                        </div>
+                        <p class="dessert-note">Десерт можно добавить к любому варианту</p>
+                    </div>
+
+                    <!-- Вариант 4 -->
+                    <div class="variant-card">
+                        <h3>Комбо 4</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/main-fish.jpg" alt="Главное блюдо">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/salad-shrimp.jpg" alt="Салат">
+                                <p>Салат</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-green.jpg" alt="Напиток">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="empty-dish">
+                                <p>—</p>
+                            </div>
+                        </div>
+                        <p class="dessert-note">Десерт можно добавить к любому варианту</p>
+                    </div>
+
+                    <!-- Вариант 5 -->
+                    <div class="variant-card">
+                        <h3>Комбо 5</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/main-beef.jpg" alt="Главное блюдо">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-black.jpg" alt="Напиток">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="empty-dish">
+                                <p>—</p>
+                            </div>
+                            <div class="empty-dish">
+                                <p>—</p>
+                            </div>
+                        </div>
+                        <p class="dessert-note">Десерт можно добавить к любому варианту</p>
+                    </div>
+                </div>
+            </section>
+
             <section class="order-form-section">
                 <h2>Оформление заказа</h2>
                 <form id="lunch-order-form" action="https://httpbin.org/post" method="POST">
@@ -167,10 +290,45 @@
     </div>
 
     <!-- Подключаем JavaScript файлы -->
-    <script src="dishes.js"></script>
+    <!-- В конец файла build-lunch.html, перед закрывающим тегом </body> -->
+    <script src="api-service.js"></script>
     <script src="display-dishes.js"></script>
     <script src="order-manager.js"></script>
     <script src="filters.js"></script>
-    <script src="main.js"></script>
+    <script src="order-validation.js"></script>
+
+    <script>
+        // Главная функция инициализации
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('BusinessLunch - Запуск загрузки данных...');
+        
+            // Загружаем блюда из API
+           if (typeof apiService !== 'undefined') {
+               apiService.loadDishes();
+            } else {
+               console.error('API сервис не загружен');
+            
+               // Используем локальные данные
+                if (typeof onDishesLoaded === 'function') {
+                    // Получаем fallback данные
+                    const fallbackDishes = [
+                    // ... локальные данные
+                   ];
+                
+                    // Инициализируем модули с локальными данными
+                    if (typeof window.initDishes === 'function') {
+                        window.initDishes(fallbackDishes);
+                    }
+                
+                    if (typeof window.initDishesForOrder === 'function') {
+                        window.initDishesForOrder(fallbackDishes);
+                    }
+                
+                    onDishesLoaded();
+                }
+            }
+        });
+    </script>
+    
 </body>
 </html>
