@@ -1,0 +1,81 @@
+<!-- test-api.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест API - BusinessLunch</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { max-width: 800px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        #result { margin-top: 20px; padding: 15px; background: #f5f5f5; }
+        .dish-item { border-bottom: 1px solid #ddd; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Тестирование функции loadDishes()</h1>
+        <p>URL API: <code>https://edu.std-900.ist.mospolytech.ru/labs/api/dishes</code></p>
+        
+        <button id="test-btn">Запустить loadDishes()</button>
+        <button id="test-xhr">Тест XMLHttpRequest</button>
+        
+        <div id="result">
+            <h3>Результат:</h3>
+            <div id="dishes-list"></div>
+        </div>
+    </div>
+
+    <script src="api-service.js"></script>
+    <script>
+        document.getElementById('test-btn').addEventListener('click', async function() {
+            console.clear();
+            console.log('=== ТЕСТ loadDishes() ===');
+            
+            const resultDiv = document.getElementById('dishes-list');
+            resultDiv.innerHTML = '<p>Загрузка...</p>';
+            
+            try {
+                // Вызываем функцию loadDishes()
+                const dishes = await window.loadDishes();
+                
+                // Показываем результат
+                resultDiv.innerHTML = `
+                    <p><strong>✅ Успешно!</strong> Загружено ${dishes.length} блюд</p>
+                    <h4>Первые 5 блюд:</h4>
+                `;
+                
+                dishes.slice(0, 5).forEach(dish => {
+                    resultDiv.innerHTML += `
+                        <div class="dish-item">
+                            <strong>${dish.name}</strong><br>
+                            Категория: ${dish.category}, Цена: ${dish.price} ₽
+                        </div>
+                    `;
+                });
+                
+                if (dishes.length > 5) {
+                    resultDiv.innerHTML += `<p>... и еще ${dishes.length - 5} блюд</p>`;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">❌ Ошибка: ${error.message}</p>`;
+            }
+        });
+        
+        // Тест XMLHttpRequest версии
+        document.getElementById('test-xhr').addEventListener('click', function() {
+            if (window.apiService && window.apiService.loadDishesXHR) {
+                window.apiService.loadDishesXHR()
+                    .then(dishes => {
+                        alert(`XMLHttpRequest: Загружено ${dishes.length} блюд`);
+                    })
+                    .catch(error => {
+                        alert(`XMLHttpRequest ошибка: ${error.message}`);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

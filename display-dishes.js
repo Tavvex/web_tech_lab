@@ -1,38 +1,74 @@
-// display-dishes.js - ОБНОВЛЕННАЯ ВЕРСИЯ
+// display-dishes.js - обновленная версия
 
-// Глобальная переменная для хранения блюд (будет заполнена из API)
 let dishes = [];
 
-// Функция для инициализации блюд (вызывается после загрузки из API)
+// Функция для инициализации данных
 function initDishes(loadedDishes) {
     dishes = loadedDishes;
-    console.log(`Инициализировано ${dishes.length} блюд`);
+    console.log(`Display: инициализировано ${dishes.length} блюд`);
 }
 
-// Функция для сортировки блюд по алфавиту
-function sortDishesAlphabetically(dishesArray) {
-    return dishesArray.sort((a, b) => {
-        return a.name.localeCompare(b.name);
+// Функция для получения категории по индексу секции
+function getCategoryBySectionIndex(index) {
+    const categories = ['soup', 'main', 'salad', 'drink', 'dessert'];
+    return categories[index] || null;
+}
+
+// Функция для отображения блюд в секции
+function displayDishesInSection(sectionIndex, filterKind = 'all') {
+    const category = getCategoryBySectionIndex(sectionIndex);
+    if (!category) return;
+    
+    const sections = document.querySelectorAll('main section');
+    if (!sections[sectionIndex]) return;
+    
+    const section = sections[sectionIndex];
+    const dishesGrid = section.querySelector('.dishes-grid');
+    if (!dishesGrid) return;
+    
+    // Очищаем сетку
+    dishesGrid.innerHTML = '';
+    
+    // Фильтруем блюда по категории
+    let categoryDishes = dishes.filter(dish => dish.category === category);
+    
+    // Применяем фильтр по kind
+    if (filterKind !== 'all') {
+        categoryDishes = categoryDishes.filter(dish => dish.kind === filterKind);
+    }
+    
+    // Сортируем по алфавиту
+    categoryDishes.sort((a, b) => a.name.localeCompare(b.name));
+    
+    // Если нет блюд
+    if (categoryDishes.length === 0) {
+        dishesGrid.innerHTML = '<p class="no-dishes">Блюда не найдены</p>';
+        return;
+    }
+    
+    // Создаем карточки блюд
+    categoryDishes.forEach(dish => {
+        const dishCard = createDishCard(dish);
+        dishesGrid.appendChild(dishCard);
     });
 }
 
-// Функция для создания карточки блюда
+// Функция создания карточки блюда
 function createDishCard(dish) {
     const dishCard = document.createElement('div');
     dishCard.className = 'dish-card';
     dishCard.setAttribute('data-dish', dish.keyword);
     dishCard.setAttribute('data-kind', dish.kind);
     
-    // Обрабатываем URL изображения (может быть абсолютным или относительным)
+    // Обрабатываем URL изображения
     let imageUrl = dish.image;
-    if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-        // Если это относительный путь, добавляем базовый путь
+    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('images/')) {
         imageUrl = 'images/' + imageUrl;
     }
     
-    // Создаем содержимое карточки
     dishCard.innerHTML = `
-        <img src="${imageUrl}" alt="${dish.name}" onerror="this.src='images/default-dish.jpg'">
+        <img src="${imageUrl || 'images/default-dish.jpg'}" alt="${dish.name}" 
+             onerror="this.src='images/default-dish.jpg'">
         <p class="price">${dish.price} ₽</p>
         <p class="name">${dish.name}</p>
         <p class="weight">${dish.count}</p>
@@ -42,93 +78,40 @@ function createDishCard(dish) {
     return dishCard;
 }
 
-// Функция для отображения блюд в определенной секции с фильтрацией
-function displayDishesInSection(sectionIndex, category, filterKind = 'all') {
-    const sections = document.querySelectorAll('main section');
-    if (!sections[sectionIndex]) return;
-    
-    const section = sections[sectionIndex];
-    const dishesGrid = section.querySelector('.dishes-grid');
-    if (!dishesGrid) return;
-    
-    dishesGrid.innerHTML = ''; // Очищаем существующие блюда
-    
-    // Фильтруем блюда по категории и виду
-    let filteredDishes = dishes.filter(dish => dish.category === category);
-    
-    if (filterKind !== 'all') {
-        filteredDishes = filteredDishes.filter(dish => dish.kind === filterKind);
-    }
-    
-    // Если нет блюд для отображения
-    if (filteredDishes.length === 0) {
-        const noDishesMessage = document.createElement('div');
-        noDishesMessage.className = 'no-dishes-message';
-        noDishesMessage.textContent = 'Блюда не найдены';
-        dishesGrid.appendChild(noDishesMessage);
-        return;
-    }
-    
-    // Сортируем по алфавиту
-    const sortedDishes = sortDishesAlphabetically(filteredDishes);
-    
-    // Отображаем блюда
-    sortedDishes.forEach(dish => {
-        dishesGrid.appendChild(createDishCard(dish));
-    });
-}
-
-// Функция для отображения всех блюд на странице
+// Функция отображения всех блюд
 function displayAllDishes() {
     if (dishes.length === 0) {
-        console.log('Нет данных о блюдах для отображения');
+        console.warn('Нет данных для отображения');
         return;
     }
     
-    // Супы (индекс 0)
-    displayDishesInSection(0, 'soup');
-    
-    // Главные блюда (индекс 1)
-    displayDishesInSection(1, 'main');
-    
-    // Салаты (индекс 2)
-    displayDishesInSection(2, 'salad');
-    
-    // Напитки (индекс 3)
-    displayDishesInSection(3, 'drink');
-    
-    // Десерты (индекс 4)
-    displayDishesInSection(4, 'dessert');
-}
-
-// Функция, вызываемая после загрузки блюд из API
-function onDishesLoaded() {
-    console.log('Блюда загружены, начинаем отображение...');
-    
-    // Получаем блюда из API сервиса
-    if (typeof apiService !== 'undefined') {
-        const loadedDishes = apiService.getDishes();
-        if (loadedDishes && loadedDishes.length > 0) {
-            initDishes(loadedDishes);
-            displayAllDishes();
-            
-            // Инициализируем фильтры после отображения
-            if (typeof initFilters === 'function') {
-                setTimeout(initFilters, 100);
-            }
-        }
+    // Отображаем блюда в каждой секции
+    for (let i = 0; i < 5; i++) {
+        displayDishesInSection(i);
     }
+    
+    console.log('Все блюда отображены');
 }
 
-// Экспортируем функцию для использования в API сервисе
-window.onDishesLoaded = onDishesLoaded;
-
-// Инициализация при загрузке страницы (если блюда уже есть)
-document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем, есть ли уже загруженные блюды
-    if (dishes.length > 0) {
+// Callback для вызова после загрузки данных из API
+window.onDishesLoaded = function() {
+    console.log('onDishesLoaded вызван');
+    
+    // Получаем данные из API сервиса
+    const loadedDishes = window.apiService ? window.apiService.getDishes() : [];
+    
+    if (loadedDishes && loadedDishes.length > 0) {
+        initDishes(loadedDishes);
         displayAllDishes();
+        
+        // Инициализируем фильтры после отображения
+        if (typeof initFilters === 'function') {
+            setTimeout(initFilters, 100);
+        }
+    } else {
+        console.error('Нет данных для отображения');
     }
-    
-    console.log('Display dishes module загружен');
-});
+};
+
+// Экспортируем функции для фильтров
+window.displayDishesInSection = displayDishesInSection;
