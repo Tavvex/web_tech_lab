@@ -296,39 +296,23 @@
     <script src="order-manager.js"></script>
     <script src="filters.js"></script>
     <script src="order-validation.js"></script>
-
+    
     <script>
-        // Главная функция инициализации
+        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('BusinessLunch - Запуск загрузки данных...');
-        
-            // Загружаем блюда из API
-           if (typeof apiService !== 'undefined') {
-               apiService.loadDishes();
-            } else {
-               console.error('API сервис не загружен');
+            console.log('BusinessLunch - Инициализация...');
             
-               // Используем локальные данные
-                if (typeof onDishesLoaded === 'function') {
-                    // Получаем fallback данные
-                    const fallbackDishes = [
-                    // ... локальные данные
-                   ];
-                
-                    // Инициализируем модули с локальными данными
-                    if (typeof window.initDishes === 'function') {
-                        window.initDishes(fallbackDishes);
-                    }
-                
-                    if (typeof window.initDishesForOrder === 'function') {
-                        window.initDishesForOrder(fallbackDishes);
-                    }
-                
-                    onDishesLoaded();
-                }
+            // Вызываем требуемую функцию loadDishes()
+            if (typeof loadDishes === 'function') {
+                loadDishes().then(function(dishes) {
+                    console.log(`Основная страница: загружено ${dishes.length} блюд`);
+                }).catch(function(error) {
+                    console.error('Ошибка загрузки:', error);
+                });
+            } else {
+                console.error('Функция loadDishes не найдена!');
             }
         });
     </script>
-    
 </body>
 </html>
