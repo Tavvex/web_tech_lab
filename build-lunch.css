@@ -138,14 +138,13 @@ section {
     margin-bottom: 50px;
 }
 
-/* Добавляем в build-lunch.css */
 
 /* Стили для формы заказа */
 .order-form-section {
     background-color: white;
     padding: 40px;
     border-radius: 35px;
-    filter: drop-shadow(17px 19px 24px rgba(0, 0, 0, 0.13));
+    filter: drop-shadow(17px 19px 24px rgba(0, 0, 0, 0.1));
     margin: 40px 0;
 }
 
@@ -316,5 +315,152 @@ section {
     .form-group select,
     .form-group textarea {
         padding: 10px 12px;
+    }
+}
+.selected-dish-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.dish-name {
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.dish-price {
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 15px;
+}
+
+.remove-dish-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.remove-dish-btn:hover {
+    color: #c0392b;
+}
+
+.dish-not-selected {
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #bdc3c7;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.empty-order-message {
+    padding: 30px;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    font-style: italic;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 2px dashed #bdc3c7;
+}
+
+/* Стили для блока стоимости */
+.order-cost-block {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #2c3e50;
+}
+
+.total-cost {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.total-label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.total-amount {
+    font-weight: 700;
+    color: #27ae60;
+    font-size: 1.5rem;
+}
+
+/* Анимация при выборе блюда */
+@keyframes dish-selected {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.dish-card.selected {
+    animation: dish-selected 0.3s ease;
+    border: 2px solid #27ae60;
+}
+
+/* Добавим в build-lunch.css - новые стили для фильтров */
+
+/* Стили для блока фильтров */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid #e0e0e0;
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    color: #34495e;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.filter-btn.active {
+    background-color: tomato;
+    color: white;
+    border-color: tomato;
+}
+
+.filter-btn.active:hover {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+/* Адаптивность для фильтров */
+@media (max-width: 600px) {
+    .filters {
+        justify-content: center;
+        padding: 10px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
