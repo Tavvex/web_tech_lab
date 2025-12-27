@@ -1,8 +1,8 @@
-// [file name]: api-config.js
+// [file name]: api-config.js - ДОБАВЛЯЕМ ФУНКЦИИ ДЛЯ РАБОТЫ С API
+
 const API_CONFIG = {
     BASE_URL: 'https://edu.std-900.ist.mospolytech.ru',
-    // BASE_URL: 'http://lab8-api.std-900.ist.mospolytech.ru', // Для Московского Политеха
-    API_KEY: '41fad94b-b5f7-40bf-b968-52a26cd52041', // Замените на ваш ключ API
+    API_KEY: '41fad94b-b5f7-40bf-b968-52a26cd52041',
     ENDPOINTS: {
         DISHES: '/labs/api/dishes',
         ORDERS: '/labs/api/orders'
@@ -11,7 +11,9 @@ const API_CONFIG = {
 
 // Функция для получения URL с API ключом
 function getApiUrl(endpoint) {
-    return `${API_CONFIG.BASE_URL}${endpoint}?api_key=${API_CONFIG.API_KEY}`;
+    const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}api_key=${API_CONFIG.API_KEY}`;
 }
 
 // Общие функции для работы с API
@@ -64,9 +66,11 @@ async function getOrder(orderId) {
     return await makeApiRequest(url);
 }
 
-// Функция для создания заказа
+// Функция для создания заказа (ИСПРАВЛЕННАЯ)
 async function createOrder(orderData) {
     const url = getApiUrl(API_CONFIG.ENDPOINTS.ORDERS);
+    console.log('Создание заказа по URL:', url);
+    console.log('Данные заказа:', orderData);
     return await makeApiRequest(url, 'POST', orderData);
 }
 
@@ -81,3 +85,13 @@ async function deleteOrder(orderId) {
     const url = getApiUrl(`${API_CONFIG.ENDPOINTS.ORDERS}/${orderId}`);
     return await makeApiRequest(url, 'DELETE');
 }
+
+// Экспортируем функции
+window.API_CONFIG = API_CONFIG;
+window.getApiUrl = getApiUrl;
+window.getDishes = getDishes;
+window.getOrders = getOrders;
+window.getOrder = getOrder;
+window.createOrder = createOrder;
+window.updateOrder = updateOrder;
+window.deleteOrder = deleteOrder;

@@ -148,11 +148,20 @@ function displayOrderItems() {
             
             dishCard.innerHTML = `
                 <img src="${imageSrc}" alt="${dish.name}" loading="lazy" 
-                     onerror="this.src='images/default-dish.jpg'">
-                <p class="price">${dish.price} ₽</p>
-                <p class="name">${dish.name}</p>
-                <p class="weight">${dish.count}</p>
-                <button type="button" class="remove-btn" data-category="${category}">
+                     style="width: 100%; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 10px;">
+                <p class="price" style="font-size: 1.2rem; font-weight: 700; color: #2c3e50; margin-bottom: 5px;">
+                    ${dish.price} ₽
+                </p>
+                <p class="name" style="font-size: 1rem; font-weight: 500; margin-bottom: 5px; flex-grow: 1; line-height: 1.3;">
+                    ${dish.name}
+                </p>
+                <p class="weight" style="color: #7f8c8d; margin-bottom: 10px; font-size: 0.85rem;">
+                    ${dish.count}
+                </p>
+                <button type="button" class="remove-btn" data-category="${category}" 
+                        style="background-color: #e74c3c; color: white; border: none; padding: 8px 15px; 
+                               border-radius: 5px; cursor: pointer; font-weight: 500; margin-top: 5px; 
+                               width: 100%; font-size: 0.9rem;">
                     Удалить
                 </button>
             `;
