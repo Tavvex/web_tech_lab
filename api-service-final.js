@@ -43,7 +43,19 @@ async function loadDishes() {
             window.onDishesLoaded();
         }, 300);
     }
+    console.log('📊 Данные загружены, dishes содержит:', dishes);
+    console.log('📊 Тип данных:', typeof dishes);
+    console.log('📊 Это массив?', Array.isArray(dishes));
+    console.log('📊 Количество элементов:', dishes.length);
     
+    if (dishes.length > 0) {
+        console.log('📊 Пример первого блюда:', dishes[0]);
+    }
+
+    // Проверяем, существует ли callback
+    console.log('📊 onDishesLoaded существует?', typeof window.onDishesLoaded);
+    console.log('📊 displayDishes существует?', typeof window.displayDishes);
+
     return dishes;
 }
 

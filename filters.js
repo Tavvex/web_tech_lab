@@ -1,4 +1,4 @@
-// filters.js - новый файл для фильтрации
+// [file name]: filters.js
 // Объект для хранения активных фильтров для каждой категории
 const activeFilters = {
     soup: 'all',
