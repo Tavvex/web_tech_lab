@@ -306,3 +306,115 @@
         font-size: 0.9rem;
     }
 }
+
+/* order-checkout.css - исправляем размеры карточек */
+
+/* Стили для карточек блюд на странице оформления */
+.order-items .dish-card {
+    padding: 15px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 180px;
+}
+
+/* Изображения в карточках заказа */
+.order-items .dish-card img {
+    width: 100%;
+    height: 120px; /* Фиксированная высота */
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* Текст в карточках */
+.order-items .dish-card .price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.order-items .dish-card .name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    flex-grow: 1;
+}
+
+.order-items .dish-card .weight {
+    color: #7f8c8d;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+}
+
+/* Кнопка удаления */
+.order-items .dish-card .remove-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.order-items .dish-card .remove-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Сетка для карточек блюд в заказе */
+.order-items .dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Сообщение "блюдо не выбрано" */
+.no-dish-message {
+    padding: 15px;
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #bdc3c7;
+    font-size: 0.9rem;
+}
+
+/* Адаптивность для карточек */
+@media (max-width: 768px) {
+    .order-items .dishes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .order-items .dish-card img {
+        height: 100px;
+    }
+    
+    .order-items .dish-card {
+        padding: 12px;
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-items .dish-card img {
+        height: 90px;
+    }
+    
+    .order-items .dish-card .price {
+        font-size: 1.1rem;
+    }
+    
+    .order-items .dish-card .name {
+        font-size: 0.9rem;
+    }
+}
