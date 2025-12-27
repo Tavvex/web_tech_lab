@@ -1,0 +1,206 @@
+<!-- [file name]: orders.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои заказы - BusinessLunch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="orders.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>BusinessLunch</h1>
+            <nav>
+                <a href="index.html" id="active">Главная</a>
+                <a href="build-lunch.html">Собрать ланч</a>
+                <a href="order-checkout.html">Оформить заказ</a>
+                <a href="orders.html">Мои заказы</a>
+                <a href="landing.html">Лендинг</a>
+                <a href="#contacts">Контакты</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="orders-section">
+                <h2>Мои заказы</h2>
+                <div class="orders-container">
+                    <div id="loading" class="loading">
+                        <p>Загрузка заказов...</p>
+                    </div>
+                    <div id="no-orders" class="no-orders" style="display: none;">
+                        <i class="bi bi-cart-x"></i>
+                        <p>У вас пока нет заказов</p>
+                        <a href="build-lunch.html" class="btn-primary">Сделать первый заказ</a>
+                    </div>
+                    <div id="orders-list" class="orders-list">
+                        <!-- Заказы будут загружаться динамически -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer id="contacts">
+            <h2>Контакты</h2>
+            <p>Москва, ...</p>
+            <p>Телефон: <a href="...">...</a></p>
+            <p>Email: <a href="...">...</a></p>
+            <p>Время работы: ...</p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно просмотра деталей заказа -->
+    <div id="view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Детали заказа</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="order-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Номер заказа:</span>
+                        <span id="detail-id" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Дата оформления:</span>
+                        <span id="detail-created-at" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Имя:</span>
+                        <span id="detail-full-name" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span id="detail-email" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Телефон:</span>
+                        <span id="detail-phone" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Адрес доставки:</span>
+                        <span id="detail-address" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Время доставки:</span>
+                        <span id="detail-delivery-time" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Состав заказа:</span>
+                        <div id="detail-dishes" class="detail-value dishes-list"></div>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Комментарий:</span>
+                        <span id="detail-comment" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Стоимость:</span>
+                        <span id="detail-total" class="detail-value price"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary close-modal">ОК</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования заказа -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Редактировать заказ</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-order-form">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-full-name">Имя *</label>
+                        <input type="text" id="edit-full-name" name="full_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-email">Email *</label>
+                        <input type="email" id="edit-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-phone">Телефон *</label>
+                        <input type="tel" id="edit-phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-delivery-address">Адрес доставки *</label>
+                        <input type="text" id="edit-delivery-address" name="delivery_address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Тип доставки *</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="delivery_type" value="now" checked>
+                                Как можно скорее
+                            </label>
+                            <label>
+                                <input type="radio" name="delivery_type" value="by_time">
+                                Ко времени
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="edit-delivery-time-group" style="display: none;">
+                        <label for="edit-delivery-time">Время доставки *</label>
+                        <input type="time" id="edit-delivery-time" name="delivery_time" 
+                               min="07:00" max="23:00" step="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-comment">Комментарий</label>
+                        <textarea id="edit-comment" name="comment" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="edit-subscribe" name="subscribe" value="1">
+                        <label for="edit-subscribe">Получать информацию о скидках и акциях</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-edit">Отмена</button>
+                <button class="btn-primary" id="save-edit">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Удаление заказа</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить заказ <span id="delete-order-number" class="order-number"></span>?</p>
+                <p class="warning">Это действие нельзя отменить.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-delete">Отмена</button>
+                <button class="btn-danger" id="confirm-delete">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Подключаем JavaScript файлы -->
+    <script src="api-config.js"></script>
+    <script src="orders.js"></script>
+</body>
+</html>

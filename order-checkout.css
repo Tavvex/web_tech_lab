@@ -1,0 +1,308 @@
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Левая колонка: Состав заказа */
+.order-composition {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.order-composition h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid tomato;
+    padding-bottom: 10px;
+}
+
+.empty-order-message {
+    padding: 40px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 2px dashed #bdc3c7;
+    margin-bottom: 30px;
+}
+
+.empty-order-message p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.empty-order-message a {
+    color: tomato;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.empty-order-message a:hover {
+    text-decoration: underline;
+}
+
+.order-category {
+    margin-bottom: 30px;
+}
+
+.order-category h3 {
+    color: #34495e;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.order-items .dishes-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.order-items .dish-card {
+    padding: 20px;
+    position: relative;
+}
+
+.order-items .dish-card .remove-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.order-items .dish-card .remove-btn:hover {
+    background-color: #c0392b;
+}
+
+.order-summary {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #2c3e50;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+#total-amount {
+    color: #27ae60;
+    font-size: 1.6rem;
+}
+
+/* Правая колонка: Форма оформления */
+.order-form-section {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.order-form-section h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid tomato;
+    padding-bottom: 10px;
+}
+
+.customer-block h3 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.4rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="time"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: tomato;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.radio-group input[type="radio"] {
+    width: 18px;
+    height: 18px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.back-btn, .submit-btn {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.back-btn {
+    background-color: #f1eee9;
+    color: #2c3e50;
+    text-decoration: none;
+    text-align: center;
+}
+
+.back-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.submit-btn {
+    background-color: tomato;
+    color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #e74c3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.submit-btn:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .order-form-section {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 0 15px;
+    }
+    
+    .order-composition,
+    .order-form-section {
+        padding: 20px;
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .order-composition h2,
+    .order-form-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .order-category h3 {
+        font-size: 1.2rem;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group input[type="time"],
+    .form-group textarea {
+        padding: 10px 12px;
+    }
+    
+    .back-btn, .submit-btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,123 @@
+/* [file name]: landing.css */
+/* Custom styles for Bootstrap landing page */
+
+:root {
+    --bs-primary: #dc3545;
+    --bs-primary-rgb: 220, 53, 69;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Hero Section */
+.hero-section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.hero-image {
+    position: relative;
+}
+
+.badge-overlay {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    max-width: 200px;
+    z-index: 1;
+}
+
+/* Features */
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* Stats */
+.stat-number {
+    font-weight: 700;
+}
+
+/* Contact */
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-links .btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Footer */
+footer a {
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--bs-danger) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .badge-overlay {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: -30px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+}
+
+/* Animation for scroll */
+.fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -16,16 +16,149 @@
             <nav>
                 <a href="index.html">Главная</a>
                 <a href="build-lunch.html" id="active">Собрать ланч</a>
-                <a href="orders.html">Заказы</a>
+                <a href="order-checkout.html">Оформить заказ</a>
+                <a href="orders.html">Мои заказы</a>
+                <a href="landing.html">Лендинг</a>
                 <a href="#contacts">Контакты</a>
             </nav>
         </header>
 
         <main>
-            <!-- Сообщение о загрузке (пока грузятся данные) -->
-            <div id="loading-message" class="loading-message">
-                <p>Загружаем меню...</p>
-                <div class="loader"></div>
+            <!-- Добавить после заголовка main, перед панелью оформления -->
+            <section class="lunch-variants-section">
+                <h2>Доступные варианты бизнес-ланча</h2>
+                <p class="lunch-info">Выберите один из предложенных вариантов или соберите свой</p>
+    
+                <div class="variants-grid">
+                    <!-- Вариант 1 -->
+                   <div class="variant-card" data-combo="full">
+                       <h3>Полный ланч</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-murhs.jpg" alt="Суп" loading="lazy">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/main-rise.jpg" alt="Главное блюдо" loading="lazy">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/salad-caesar.jpg" alt="Салат" loading="lazy">
+                                <p>Салат</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток" loading="lazy">
+                                <p>Напиток</p>
+                            </div>
+                        </div>
+                        <div class="dessert-note">+ Десерт по желанию</div>
+                    </div>
+        
+                    <!-- Вариант 2 -->
+                    <div class="variant-card" data-combo="soup-main-drink">
+                        <h3>Стандартный</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-murhs.jpg" alt="Суп" loading="lazy">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/main-rise.jpg" alt="Главное блюдо" loading="lazy">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток" loading="lazy">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="variant-dish empty-dish">
+                                <span>—</span>
+                            </div>
+                        </div>
+                        <div class="dessert-note">+ Десерт по желанию</div>
+                    </div>
+
+                    <!-- Вариант 3 -->
+                    <div class="variant-card" data-combo="soup-salad-drink">
+                        <h3>Лёгкий</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/soup-murhs.jpg" alt="Суп" loading="lazy">
+                                <p>Суп</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/salad-caesar.jpg" alt="Салат" loading="lazy">
+                                <p>Салат</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток" loading="lazy">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="variant-dish empty-dish">
+                                <span>—</span>
+                            </div>
+                        </div>
+                        <div class="dessert-note">+ Десерт по желанию</div>
+                    </div>
+
+                    <!-- Вариант 4 -->
+                    <div class="variant-card" data-combo="main-salad-drink">
+                        <h3>Без супа</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/main-rise.jpg" alt="Главное блюдо" loading="lazy">
+                                <p>Главное блюдо</p>
+                            </div>
+                        <div class="variant-dish">
+                                <img src="images/salad-caesar.jpg" alt="Салат" loading="lazy">
+                                <p>Салат</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток" loading="lazy">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="variant-dish empty-dish">
+                                <span>—</span>
+                            </div>
+                        </div>
+                        <div class="dessert-note">+ Десерт по желанию</div>
+                    </div>
+
+                    <!-- Вариант 5 -->
+                    <div class="variant-card" data-combo="main-drink">
+                        <h3>Минимальный</h3>
+                        <div class="dishes-in-variant">
+                            <div class="variant-dish">
+                                <img src="images/main-rise.jpg" alt="Главное блюдо" loading="lazy">
+                                <p>Главное блюдо</p>
+                            </div>
+                            <div class="variant-dish">
+                                <img src="images/drink-orange.jpg" alt="Напиток" loading="lazy">
+                                <p>Напиток</p>
+                            </div>
+                            <div class="variant-dish empty-dish">
+                                <span>—</span>
+                            </div>
+                            <div class="variant-dish empty-dish">
+                                <span>—</span>
+                            </div>
+                        </div>
+                        <div class="dessert-note">+ Десерт по желанию</div>
+                    </div>
+                </div>
+    
+                <div class="combo-info">
+                    <p><strong>Десерты можно добавлять к любому варианту ланча!</strong></p>
+             </div>
+            </section>
+            <!-- Панель оформления заказа -->
+            <div id="checkout-panel" class="checkout-panel">
+                <div class="checkout-content">
+                    <div class="checkout-info">
+                        <div class="checkout-total">0 ₽</div>
+                        <div class="checkout-message info">Выберите блюда</div>
+                    </div>
+                    <a href="order-checkout.html" class="checkout-link">Перейти к оформлению</a>
+                </div>
             </div>
 
             <!-- Супы -->
@@ -96,71 +229,6 @@
                     <!-- Блюда добавляются динамически -->
                 </div>
             </section>
-            
-            <section class="order-form-section">
-                <h2>Оформление заказа</h2>
-                <form id="lunch-order-form" action="https://httpbin.org/post" method="POST">
-                    <div class="form-container">
-                        <!-- Блок с заказом клиента -->
-                        <div class="order-block">
-                            <h3>Ваш заказ</h3>
-                            <!-- Содержимое будет заполняться через JavaScript -->
-                        </div>
-                        
-                        <!-- Блок с данными клиента -->
-                        <div class="customer-block">
-                            <h3>Данные для доставки</h3>
-                            
-                            <div class="form-group">
-                                <label for="name">Имя *</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            
-                            <div class="form-group checkbox-group">
-                                <input type="checkbox" id="subscription" name="subscription" checked>
-                                <label for="subscription">Получать информацию о скидках и акциях</label>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="phone">Телефон *</label>
-                                <input type="tel" id="phone" name="phone" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="address">Адрес доставки *</label>
-                                <input type="text" id="address" name="address" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Время доставки *</label>
-                                <div class="radio-group">
-                                    <label for="time_asap">Как можно скорее</label>
-                                    <input type="radio" id="time_asap" name="delivery_time" value="asap" required>
-                                
-                                    <label for="time_specific">Указать время</label>
-                                    <input type="radio" id="time_specific" name="delivery_time" value="specific">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="delivery_time_input">Укажите время доставки</label>
-                                <input type="time" id="delivery_time_input" name="delivery_time_input" 
-                                       min="07:00" max="23:00" step="300">
-                            </div>
-                            
-                            <div class="form-buttons">
-                                <button type="reset" class="reset-btn">Сбросить</button>
-                                <button type="submit" class="submit-btn">Отправить заказ</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </section>
         </main>
 
         <footer id="contacts">
@@ -173,9 +241,16 @@
     </div>
 
     <!-- Подключаем JavaScript файлы -->
+    <!-- В build-lunch.html обновляем секцию подключаемых скриптов: -->
+    <script src="config.js"></script>
     <script src="api-service.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="localStorage-service.js"></script>
+    <script src="combo-checker.js"></script> <!-- Лаб 6 -->
     <script src="display-dishes.js"></script>
-    <script src="order-manager.js"></script>
+    <script src="order-manager.js"></script> <!-- Исправленный -->
     <script src="filters.js"></script>
+    <script src="api-config.js"></script>
+    <script src="form-submit.js"></script>
 </body>
 </html>

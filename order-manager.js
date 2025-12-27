@@ -1,4 +1,5 @@
-// [file name]: order-manager.js
+// [file name]: order-manager.js - ИСПРАВЛЕННАЯ ВЕРСИЯ
+
 // Объект для хранения выбранных блюд
 const selectedDishes = {
     soup: null,
@@ -8,239 +9,302 @@ const selectedDishes = {
     dessert: null
 };
 
-// Ссылки на DOM элементы
-let orderBlock = null;
-let emptyMessage = null;
-let costBlock = null;
+// DOM элементы
+let checkoutPanel = null;
 
-// Инициализация DOM элементов
-function initDomElements() {
-    const form = document.getElementById('lunch-order-form');
-    if (!form) return;
+// Инициализация
+function initOrderManager() {
+    console.log('Инициализация Order Manager');
     
-    orderBlock = form.querySelector('.order-block');
+    // Находим панель оформления
+    checkoutPanel = document.getElementById('checkout-panel');
     
-    // Создаем или находим элементы
-    emptyMessage = orderBlock.querySelector('.empty-order-message');
-    if (!emptyMessage) {
-        emptyMessage = document.createElement('div');
-        emptyMessage.className = 'empty-order-message';
-    }
+    // Загружаем сохраненный заказ
+    loadOrder();
     
-    costBlock = document.getElementById('order-cost-block');
-    if (!costBlock) {
-        costBlock = document.createElement('div');
-        costBlock.id = 'order-cost-block';
-        costBlock.className = 'order-cost-block';
-    }
+    // Настраиваем обработчики событий
+    initEventHandlers();
+    
+    // Обновляем UI
+    updateSelectedVisuals();
+    updateCheckoutPanel();
 }
 
-// Обновляем форму заказа
-function updateOrderForm() {
-    if (!orderBlock) initDomElements();
-    if (!orderBlock) return;
-    
-    // Удаляем все элементы кроме заголовка h3
-    const h3 = orderBlock.querySelector('h3');
-    const existingElements = orderBlock.querySelectorAll('*:not(h3)');
-    existingElements.forEach(el => el.remove());
-    
-    // Добавляем обратно заголовок, если он был удален
-    if (!orderBlock.contains(h3)) {
-        const newH3 = document.createElement('h3');
-        newH3.textContent = 'Ваш заказ';
-        orderBlock.appendChild(newH3);
-    }
-    
-    // Проверяем, выбрано ли хотя бы одно блюдо
-    const hasAnySelection = Object.values(selectedDishes).some(dish => dish !== null);
-    
-    if (!hasAnySelection) {
-        // Если ничего не выбрано, показываем одно сообщение
-        emptyMessage.textContent = 'Ничего не выбрано';
-        orderBlock.appendChild(emptyMessage);
-        
-        // Скрываем блок стоимости
-        if (costBlock.parentNode === orderBlock) {
-            orderBlock.removeChild(costBlock);
-        }
-        
-        return;
-    }
-    
-    // Функция для создания элемента выбранного блюда
-    function createSelectedDishElement(category, dish, categoryName) {
-        const dishDiv = document.createElement('div');
-        dishDiv.className = 'selected-dish form-group';
-        
-        if (dish) {
-            dishDiv.innerHTML = `
-                <label>${categoryName}</label>
-                <div class="selected-dish-info">
-                    <span class="dish-name">${dish.name}</span>
-                    <span class="dish-price">${dish.price} ₽</span>
-                    <button type="button" class="remove-dish-btn" data-category="${category}">✕</button>
-                </div>
-            `;
-        } else {
-            dishDiv.innerHTML = `
-                <label>${categoryName}</label>
-                <div class="dish-not-selected">${getNotSelectedMessage(categoryName)}</div>
-            `;
-        }
-        
-        return dishDiv;
-    }
-    
-    // Создаем и добавляем элементы для каждой категории
-    orderBlock.appendChild(createSelectedDishElement('soup', selectedDishes.soup, 'Суп'));
-    orderBlock.appendChild(createSelectedDishElement('main', selectedDishes.main, 'Главное блюдо'));
-    orderBlock.appendChild(createSelectedDishElement('salad', selectedDishes.salad, 'Салат или стартер'));
-    orderBlock.appendChild(createSelectedDishElement('drink', selectedDishes.drink, 'Напиток'));
-    orderBlock.appendChild(createSelectedDishElement('dessert', selectedDishes.dessert, 'Десерт'));
-    
-    // Добавляем комментарий
-    const commentGroup = document.createElement('div');
-    commentGroup.className = 'form-group';
-    commentGroup.innerHTML = `
-        <label for="comment">Комментарий к заказу</label>
-        <textarea id="comment" name="comment" rows="4" placeholder="Ваши пожелания..."></textarea>
-    `;
-    orderBlock.appendChild(commentGroup);
-    
-    // Добавляем блок стоимости
-    updateOrderCost();
-    orderBlock.appendChild(costBlock);
-    
-    // Добавляем обработчики для кнопок удаления
-    document.querySelectorAll('.remove-dish-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            removeDish(category);
-        });
-    });
-}
-
-// Функция для получения сообщения "не выбрано"
-function getNotSelectedMessage(categoryName) {
-    switch(categoryName) {
-        case 'Суп': return 'Суп не выбран';
-        case 'Главное блюдо': return 'Главное блюдо не выбрано';
-        case 'Салат или стартер': return 'Салат не выбран';
-        case 'Напиток': return 'Напиток не выбран';
-        case 'Десерт': return 'Десерт не выбран';
-        default: return 'Блюдо не выбрано';
-    }
-}
-
-// Функция для выбора блюда
+// Функция для выбора блюда - ОСНОВНАЯ ИСПРАВЛЕННАЯ ФУНКЦИЯ
 function selectDish(dishKeyword) {
-    // Используем функцию из API-сервиса для поиска блюда
-    const dish = window.getDishByKeyword ? window.getDishByKeyword(dishKeyword) : null;
+    console.log('Выбор блюда:', dishKeyword);
+    
+    // Получаем все блюда
+    const allDishes = window.getAllDishes ? window.getAllDishes() : [];
+    console.log('Всего блюд:', allDishes.length);
+    
+    // Ищем блюдо по keyword
+    const dish = allDishes.find(d => d.keyword === dishKeyword);
     
     if (!dish) {
         console.error('Блюдо не найдено:', dishKeyword);
+        
+        // Пробуем найти в dishes.js
+        if (typeof dishes !== 'undefined') {
+            const localDish = dishes.find(d => d.keyword === dishKeyword);
+            if (localDish) {
+                console.log('Найдено в dishes.js:', localDish.name);
+                updateDishInOrder(localDish);
+                return;
+            }
+        }
+        
+        alert('Блюдо не найдено!');
         return;
     }
     
-    console.log('Выбираем блюдо:', dish.name, 'Категория:', dish.category);
-    
-    // Проверяем, существует ли категория в selectedDishes
+    console.log('Найдено блюдо:', dish.name, 'Категория:', dish.category);
+    updateDishInOrder(dish);
+}
+
+// Обновление блюда в заказе
+function updateDishInOrder(dish) {
+    // Проверяем категорию
     if (!selectedDishes.hasOwnProperty(dish.category)) {
-        console.error('Категория не найдена в selectedDishes:', dish.category);
-        console.log('Доступные категории:', Object.keys(selectedDishes));
+        console.error('Неизвестная категория:', dish.category);
         return;
     }
     
-    // Добавляем визуальную обратную связь
-    const dishCard = document.querySelector(`[data-dish="${dishKeyword}"]`);
-    if (dishCard) {
-        dishCard.classList.add('selected');
-        setTimeout(() => {
-            dishCard.classList.remove('selected');
-        }, 300);
-    }
+    // Сохраняем предыдущее значение для лога
+    const previousDish = selectedDishes[dish.category];
+    console.log('Предыдущее блюдо в этой категории:', previousDish ? previousDish.name : 'нет');
     
+    // Обновляем заказ
     selectedDishes[dish.category] = dish;
-    console.log('Блюдо добавлено в selectedDishes:', dish.name);
-    updateOrderForm();
+    
+    // Сохраняем в localStorage
+    saveOrderToStorage();
+    
+    // Визуальная обратная связь
+    showDishAddedNotification(dish.name);
+    
+    // Обновляем UI
+    updateSelectedVisuals();
+    updateCheckoutPanel();
 }
 
-// Функция для удаления блюда из категории
-function removeDish(category) {
-    if (selectedDishes.hasOwnProperty(category)) {
-        selectedDishes[category] = null;
-        updateOrderForm();
-    } else {
-        console.error('Попытка удалить блюдо из несуществующей категории:', category);
+// Сохранение в localStorage
+function saveOrderToStorage() {
+    try {
+        // Сохраняем только ID блюд
+        const storageOrder = {
+            soup: selectedDishes.soup ? selectedDishes.soup.keyword : null,
+            main: selectedDishes.main ? selectedDishes.main.keyword : null,
+            salad: selectedDishes.salad ? selectedDishes.salad.keyword : null,
+            drink: selectedDishes.drink ? selectedDishes.drink.keyword : null,
+            dessert: selectedDishes.dessert ? selectedDishes.dessert.keyword : null
+        };
+        
+        localStorage.setItem('businessLunchOrder', JSON.stringify(storageOrder));
+        console.log('Заказ сохранен в localStorage:', storageOrder);
+    } catch (error) {
+        console.error('Ошибка сохранения в localStorage:', error);
     }
 }
 
-// Функция для подсчета и отображения стоимости заказа
-function updateOrderCost() {
-    if (!costBlock) return;
+// Загрузка из localStorage
+function loadOrder() {
+    try {
+        const saved = localStorage.getItem('businessLunchOrder');
+        if (!saved) {
+            console.log('Нет сохраненного заказа');
+            return;
+        }
+        
+        const storageOrder = JSON.parse(saved);
+        console.log('Загружен заказ из localStorage:', storageOrder);
+        
+        // Получаем все блюда
+        const allDishes = window.getAllDishes ? window.getAllDishes() : [];
+        
+        // Восстанавливаем полные объекты блюд
+        if (allDishes.length > 0) {
+            Object.keys(storageOrder).forEach(category => {
+                if (storageOrder[category] && selectedDishes.hasOwnProperty(category)) {
+                    const dish = allDishes.find(d => d.keyword === storageOrder[category]);
+                    if (dish) {
+                        selectedDishes[category] = dish;
+                        console.log('Восстановлено блюдо:', category, dish.name);
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки заказа:', error);
+    }
+}
+
+// Обновление визуального выделения
+function updateSelectedVisuals() {
+    console.log('Обновление визуального выделения');
     
-    // Вычисляем общую стоимость
+    // Снимаем все выделения
+    document.querySelectorAll('.dish-card.selected').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Выделяем выбранные блюда
+    Object.values(selectedDishes).forEach(dish => {
+        if (dish && dish.keyword) {
+            const dishCard = document.querySelector(`[data-dish="${dish.keyword}"]`);
+            if (dishCard) {
+                dishCard.classList.add('selected');
+                console.log('Выделено блюдо:', dish.name);
+            }
+        }
+    });
+}
+
+// Обновление панели оформления
+function updateCheckoutPanel() {
+    console.log('Обновление панели оформления');
+    
+    if (!checkoutPanel) {
+        console.log('Панель оформления не найдена на странице');
+        return;
+    }
+    
+    // Считаем общую стоимость
     let total = 0;
     Object.values(selectedDishes).forEach(dish => {
-        if (dish) {
+        if (dish && dish.price) {
             total += dish.price;
         }
     });
     
-    if (total > 0) {
-        costBlock.innerHTML = `
-            <div class="total-cost">
-                <span class="total-label">Стоимость заказа:</span>
-                <span class="total-amount">${total} ₽</span>
-            </div>
-        `;
-        costBlock.style.display = 'block';
-    } else {
-        costBlock.style.display = 'none';
+    console.log('Общая стоимость:', total);
+    
+    // Проверяем, есть ли выбранные блюда
+    const hasAnySelection = Object.values(selectedDishes).some(dish => dish !== null);
+    
+    if (!hasAnySelection) {
+        checkoutPanel.style.display = 'none';
+        return;
+    }
+    
+    checkoutPanel.style.display = 'block';
+    
+    // Обновляем элементы панели
+    const checkoutTotal = checkoutPanel.querySelector('.checkout-total');
+    const checkoutMessage = checkoutPanel.querySelector('.checkout-message');
+    const checkoutLink = checkoutPanel.querySelector('.checkout-link');
+    
+    if (checkoutTotal) {
+        checkoutTotal.textContent = `${total} ₽`;
+    }
+    
+    // Проверяем комбо (если функция есть)
+    if (window.getComboMessage) {
+        const comboMessage = window.getComboMessage(selectedDishes);
+        if (checkoutMessage) {
+            checkoutMessage.textContent = comboMessage.message;
+            checkoutMessage.className = `checkout-message ${comboMessage.type}`;
+        }
+        
+        if (checkoutLink) {
+            checkoutLink.style.opacity = comboMessage.canProceed ? '1' : '0.5';
+            checkoutLink.style.pointerEvents = comboMessage.canProceed ? 'auto' : 'none';
+        }
     }
 }
 
 // Инициализация обработчиков событий
 function initEventHandlers() {
+    console.log('Инициализация обработчиков событий');
+    
     // Обработчик клика на карточку блюда
     document.addEventListener('click', function(e) {
-        // Проверяем, был ли клик на карточке блюда или кнопке "Добавить"
         const dishCard = e.target.closest('.dish-card');
         const addBtn = e.target.closest('.add-btn');
         
         if (dishCard || addBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             const card = addBtn ? addBtn.closest('.dish-card') : dishCard;
             if (card) {
                 const dishKeyword = card.getAttribute('data-dish');
+                console.log('Клик по блюду:', dishKeyword);
                 selectDish(dishKeyword);
             }
         }
     });
 }
 
-// Инициализируем при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Order Manager инициализирован');
+// Показ уведомления
+function showDishAddedNotification(dishName) {
+    const notification = document.createElement('div');
+    notification.innerHTML = `
+        <div style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        ">
+            <span>✓ ${dishName} добавлен в заказ</span>
+        </div>
+    `;
     
-    // Ждем немного, чтобы API успел загрузиться
+    // Стили для анимации
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(notification);
+    
+    // Автоматическое скрытие
     setTimeout(() => {
-        initDomElements();
-        initEventHandlers();
-        updateOrderForm(); // Инициализируем форму
-    }, 500);
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) notification.remove();
+            if (style.parentNode) style.remove();
+        }, 300);
+    }, 2000);
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== ORDER MANAGER ЗАГРУЖЕН ===');
+    
+    // Ждем загрузки блюд
+    const checkInterval = setInterval(() => {
+        if (window.getAllDishes && typeof window.getAllDishes === 'function') {
+            clearInterval(checkInterval);
+            console.log('Блюда загружены, инициализируем Order Manager');
+            initOrderManager();
+        }
+    }, 100);
+    
+    // Если через 3 секунды блюда не загрузились, инициализируем без них
+    setTimeout(() => {
+        if (checkInterval) clearInterval(checkInterval);
+        console.log('Таймаут загрузки блюд, инициализируем Order Manager');
+        initOrderManager();
+    }, 3000);
 });
 
-// Обработчик для кнопки сброса формы
-document.addEventListener('DOMContentLoaded', function() {
-    const resetBtn = document.querySelector('.reset-btn');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            // Сброс выбранных блюд
-            Object.keys(selectedDishes).forEach(key => {
-                selectedDishes[key] = null;
-            });
-            updateOrderForm();
-        });
-    }
-});
+// Экспортируем функции
+window.selectedDishes = selectedDishes;
+window.selectDish = selectDish;
+window.updateCheckoutPanel = updateCheckoutPanel;
+window.loadOrder = loadOrder;

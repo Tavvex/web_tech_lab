@@ -1,4 +1,4 @@
-// [file name]: display-dishes.js
+// [file name]: display-dishes.js (УПРОЩЕННАЯ ВЕРСИЯ)
 // Функция для сортировки блюд по алфавиту
 function sortDishesAlphabetically(dishesArray) {
     return dishesArray.sort((a, b) => {
@@ -36,7 +36,7 @@ function displayDishesInSection(sectionIndex, category, filterKind = 'all') {
     
     dishesGrid.innerHTML = ''; // Очищаем существующие блюда
     
-    // Получаем блюда из API-сервиса
+    // Получаем блюда
     const allDishes = window.getAllDishes ? window.getAllDishes() : [];
     if (allDishes.length === 0) {
         dishesGrid.innerHTML = '<p class="loading">Загрузка блюд...</p>';
@@ -63,10 +63,17 @@ function displayDishesInSection(sectionIndex, category, filterKind = 'all') {
     sortedDishes.forEach(dish => {
         dishesGrid.appendChild(createDishCard(dish));
     });
+    
+    // После отображения обновляем выделение выбранных блюд
+    if (window.updateSelectedVisuals) {
+        setTimeout(window.updateSelectedVisuals, 100);
+    }
 }
 
 // Функция для отображения всех блюд на странице
 function displayAllDishes() {
+    console.log('Отображение всех блюд');
+    
     // Супы (индекс 0)
     displayDishesInSection(0, 'soup');
     
@@ -85,12 +92,22 @@ function displayAllDishes() {
 
 // Инициализируем отображение блюд после загрузки данных
 document.addEventListener('DOMContentLoaded', () => {
-    // Ждем загрузки блюд из API
-    if (window.loadDishes) {
-        window.loadDishes().then(() => {
-            displayAllDishes();
-        });
-    } else {
-        console.error('API service не загружен');
+    console.log('Display Dishes: DOM загружен');
+    
+    // Проверяем, есть ли на странице блюда для отображения
+    const hasDishSections = document.querySelectorAll('.dishes-grid').length > 0;
+    
+    if (hasDishSections) {
+        // Если есть, ждем загрузки блюд
+        if (window.loadDishes) {
+            window.loadDishes().then(() => {
+                console.log('Блюда загружены, отображаем...');
+                displayAllDishes();
+            }).catch(error => {
+                console.error('Ошибка загрузки блюд:', error);
+            });
+        } else {
+            console.error('Функция loadDishes не найдена');
+        }
     }
 });
